@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ألفا</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<script type="importmap">
+{ "imports": { "@supabase/supabase-js": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm" } }
+</script>
+<style>
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px}
+.stat{background:white;border:1px solid var(--border);padding:14px;border-radius:12px;text-align:center;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:1.4rem;font-weight:900;color:var(--navy)}
+.stat span{font-size:.75rem;color:var(--text-light);font-weight:600}
+.order-card{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
+  background:white;
+  box-shadow:var(--shadow);
+}
+.order-card .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.status{padding:4px 10px;border-radius:20px;font-size:.7rem;font-weight:800}
+.status.pending{background:#FEF3C7;color:#92400E}
+.status.accepted{background:#DBEAFE;color:#1E40AF}
+.status.in_transit{background:#E0E7FF;color:#4338CA}
+.status.delivered{background:#DCFCE7;color:#065F46}
+.status.cancelled{background:#FEE2E2;color:#991B1B}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.btn-sm{padding:7px 12px;border-radius:10px;border:1.5px solid var(--border);background:white;font-family:'Cairo';font-size:.8rem;font-weight:700;cursor:pointer;transition:.2s}
+.btn-sm:hover{background:var(--border-light)}
+.btn-sm.primary{background:var(--navy);color:white;border-color:var(--navy)}
+.btn-sm.danger{background:#FEF2F2;color:var(--danger);border-color:#FECACA}
+.search-bar{display:flex;gap:8px;margin-bottom:16px}
+</style>
+</head>
+<body>
+
+<header class="alpha-header">
+  <div class="logo-area">
+    <img src="assets/icons/icon-72.png" alt="ألفا" class="logo-img" style="width:44px;height:44px;border-radius:12px">
+    <div><h1>ألفا</h1><p>خاص</p></div>
+  </div>
+</header>
+
+<div class="container" style="max-width:740px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <h3 style="margin:0;font-weight:900">📦 طلبات ألفا</h3>
+    <a href="index.html" class="btn-sm" style="text-decoration:none">← الموقع</a>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat"><b id="statToday">0</b><span>اليوم</span></div>
+    <div class="stat"><b id="statPending">0</b><span>قيد الانتظار</span></div>
+    <div class="stat"><b id="statTotal">0</b><span>الكل</span></div>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="بحث بالاسم أو الجوال...">
+    <button class="btn-sm" onclick="location.reload()">🔄 تحديث</button>
+  </div>
+
+  <div id="ordersList">⏳ جاري التحميل...</div>
+  <div id="loginError" class="error-box"></div>
+</div>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

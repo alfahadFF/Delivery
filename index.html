@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ألفا - خدمة توصيل موثوقة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0B1E3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ألفا">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script type="importmap">
+{
+  "imports": {
+    "@supabase/supabase-js": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+  }
+}
+</script>
+</head>
+<body>
+
+<header class="alpha-header">
+  <div class="logo-area">
+    <img src="assets/logo-main.jpg" alt="ألفا" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+    <div class="logo-placeholder" style="display:none">α</div>
+    <div>
+      <h1>ألفا</h1>
+      <p>خدمة توصيل موثوقة</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="service-badge">
+    <div class="icon-box">📦</div>
+    <div>
+      <b>توصيل آمن وموثوق</b>
+      <small>خدمة يومية • التزام بالمواعيد</small>
+    </div>
+  </div>
+
+  <form id="deliveryForm">
+    
+    <div class="form-group">
+      <label>📍 من وين نستلم؟ <span>و شو المطلوب من كل مكان</span></label>
+      <div id="pickupContainer">
+        <div class="pickup-group" style="background:#fafbfc;border:1px dashed #e2e8f0;border-radius:12px;padding:10px;margin-bottom:10px">
+          <div class="dynamic-field" style="margin-bottom:8px">
+            <input type="text" class="pickup-input" placeholder="مكان الاستلام 1 - مثال: محل خضروات الفلاني" required>
+          </div>
+          <input type="text" class="pickup-goods-input" placeholder="المطلوب من هذا المكان - مثال: 2 كيلو بندورة + خس" required style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-family:'Cairo';font-size:.9rem">
+        </div>
+      </div>
+      <button type="button" class="btn-add" onclick="addPickup()">+ إضافة مكان استلام آخر</button>
+      <div class="hint">كل مكان يرتبط بمطلوبه مباشرة</div>
+    </div>
+
+    <div class="form-group">
+      <label>🏁 لوين نوصل؟</label>
+      <div id="dropoffContainer">
+        <div class="dropoff-group" style="background:#f0fdf4;border:1px dashed #bbf7d0;border-radius:12px;padding:10px;margin-bottom:10px;position:relative">
+          <input type="text" class="dropoff-input" placeholder="مكان التسليم - مثال: بيتك، مكتبك..." required style="width:100%;padding:10px 12px;border:1.5px solid #bbf7d0;border-radius:8px;font-family:'Cairo';font-size:.95rem">
+          <input type="text" class="dropoff-goods-input" placeholder="شو نسلم بهالمكان - مثال: الخضرة + الخبز" style="display:none;width:100%;margin-top:8px;padding:10px 12px;border:1.5px solid #bbf7d0;border-radius:8px;font-family:'Cairo';font-size:.9rem">
+        </div>
+      </div>
+      <button type="button" class="btn-add" onclick="addDropoff()">+ إضافة مكان تسليم آخر</button>
+      <div class="hint" id="dropoffHint">إذا مكان واحد، كل الأغراض ستصل له. إذا أكثر من مكان، حدد ماذا يوصل لكل مكان</div>
+    </div>
+
+    <div class="form-group">
+      <label>📝 ملاحظات <span>(اختياري)</span></label>
+      <textarea id="notes" placeholder="مستعجل، قابل للكسر، اتصل قبل الوصول..."></textarea>
+    </div>
+
+    <div class="divider"><span>بياناتك للتواصل</span></div>
+
+    <div class="form-group">
+      <label>👤 اسمك</label>
+      <input type="text" id="customerName" placeholder="الاسم الكامل" required>
+    </div>
+
+    <div class="form-group">
+      <label>📱 رقمك</label>
+      <input type="tel" id="customerPhone" placeholder="09XXXXXXXX" inputmode="numeric" maxlength="10" autocomplete="tel" required>
+      <div class="hint">10 أرقام، يبدأ بـ 09 - مثال: 09XXXXXXXX</div>
+      <div id="phoneError" class="field-error"></div>
+    </div>
+
+    <div class="form-group">
+      <label>🏠 عنوانك <span>(اختياري)</span></label>
+      <input type="text" id="customerAddress" placeholder="المدينة - الحي">
+    </div>
+
+    <button type="submit" id="submitBtn" class="btn-submit">💬 أرسل الطلب واتساب</button>
+
+    <div id="successBox" class="success-box"></div>
+    <div id="errorBox" class="error-box"></div>
+
+    <div class="hint" style="text-align:center;margin-top:14px;color:#94a3b8">
+      املأ بيانات الطلب وسيتم التواصل معك
+    </div>
+
+  </form>
+</div>
+
+<!-- زر اتصال واحد فقط - عائم -->
+<a id="floatingCallBtn" href="tel:" class="floating-call" title="اتصل بالناقل">📞</a>
+
+<!-- نافذة مراجعة الطلب قبل الإرسال -->
+<div id="previewModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>📋 راجع طلبك قبل الإرسال</h3>
+      <button type="button" class="modal-close" onclick="closePreview()">✕</button>
+    </div>
+    <div class="modal-body" id="previewContent">
+      <!-- يتم تعبئته بالجافاسكريبت -->
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-secondary" onclick="closePreview()">✏️ تعديل</button>
+      <button type="button" class="btn-primary" id="confirmSendBtn" onclick="confirmAndSend()">✅ تأكيد وإرسال</button>
+    </div>
+  </div>
+</div>
+
+<footer style="padding-bottom:100px;text-align:center;color:#94A3B8;font-size:.7rem">
+  ألفا © 2026
+</footer>
+
+<script type="module">
+import { CONFIG } from './js/config.js';
+function normalizeForWhatsApp(phone){
+  let p = phone.replace(/\D/g,'');
+  if(p.startsWith('00')) p = p.slice(2);
+  if(p.startsWith('09') && p.length===10) return '963' + p.slice(1);
+  if(p.startsWith('9') && p.length===9) return '963' + p;
+  if(p.startsWith('963')) return p;
+  if(p.startsWith('0')) p = p.slice(1);
+  return p;
+}
+function setupCallButtons(){
+  const carrier = CONFIG.CARRIER_PHONE || CONFIG.WHATSAPP_NUMBER;
+  const btn = document.getElementById('floatingCallBtn');
+  if(carrier){
+    let tel = carrier.trim();
+    if(!tel.startsWith('+')){
+      tel = '+' + tel.replace(/\D/g,'');
+    }
+    btn.href = `tel:${tel}`;
+  } else {
+    btn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      alert('رقم الناقل سيتم تفعيله قريباً');
+    });
+  }
+}
+setupCallButtons();
+</script>
+
+<script type="module" src="js/app.js"></script>
+<script>
+// تسجيل Service Worker للتثبيت
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg=> console.log('SW registered', reg))
+      .catch(err=> console.log('SW failed', err));
+  });
+}
+</script>
+</body>
+</html>
