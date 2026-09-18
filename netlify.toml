@@ -8,14 +8,12 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
 
+# قاعدة توجيه عامة لتطبيقات الصفحة الواحدة (SPA) بدون شروط معقدة
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  conditions = {Role = ["admin"]}
-  force = false
 
-# تأكد من أن ملفات js تُعامل كـ modules
 [[headers]]
   for = "*.js"
   [headers.values]
