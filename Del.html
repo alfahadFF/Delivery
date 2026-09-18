@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تطبيق خدمة التوصيل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #25D366; /* لون واتساب */
+            --primary-dark: #128C7E;
+            --bg-color: #f7f8fa;
+            --text-color: #2c3e50;
+            --border-color: #dcdde1;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        header {
+            background-color: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: 1.2rem 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        header p {
+            margin: 5px 0 0 0; 
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 500px;
+            margin: 1rem auto;
+            background: white;
+            padding: 1.5rem 1rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"], input[type="tel"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            box-sizing: border-box;
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, input[type="tel"]:focus, select:focus, textarea:focus {
+            border-color: var(--primary-dark);
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 90px;
+        }
+
+        .dynamic-field {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .dynamic-field input {
+            flex: 1;
+        }
+
+        .btn-add {
+            background-color: #f1f2f6;
+            color: #2f3640;
+            border: 1px dashed #b2bec3;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Cairo', sans-serif;
+            width: 100%;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            margin-top: 5px;
+        }
+
+        .btn-add:active {
+            background-color: #e4e7eb;
+        }
+
+        .btn-remove {
+            background-color: #ff7675;
+            color: white;
+            border: none;
+            padding: 0 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: background 0.2s;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-submit:active {
+            background-color: var(--primary-dark);
+        }
+
+        hr {
+            border: 0; 
+            border-top: 1px solid #f1f2f6; 
+            margin: 15px 0;
+        }
+
+        footer {
+            background-color: #2f3640;
+            color: white;
+            text-align: center;
+            padding: 1.2rem 1rem;
+            margin-top: auto;
+            font-size: 0.85rem;
+        }
+
+        .social-links {
+            margin-top: 8px;
+        }
+
+        .social-links a {
+            color: #74b9ff;
+            text-decoration: none;
+            margin: 0 8px;
+            font-weight: 600;
+        }
+
+        /* تحسينات للشاشات الصغيرة جداً */
+        @media (max-width: 480px) {
+            body {
+                background-color: #ffffff; /* جعل الخلفية بيضاء بالكامل للجوال لتبدو كأنها تطبيق حقيقي */
+            }
+            .container {
+                box-shadow: none;
+                margin: 0 auto;
+                border-radius: 0;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🚀 طلب خدمة توصيل</h1>
+        <p>أرسل طلبك وسنقوم بتوصيله بكل أمان وسرعة</p>
+    </header>
+
+    <div class="container">
+        <form id="deliveryForm">
+            <!-- بيانات العميل -->
+            <div class="form-group">
+                <label>الاسم الكريم *</label>
+                <input type="text" id="customerName" required placeholder="أدخل اسمك الكامل">
+            </div>
+
+            <div class="form-group">
+                <label>رقم الهاتف *</label>
+                <input type="tel" id="customerPhone" required placeholder="مثال: 05xxxxxxx">
+            </div>
+
+            <div class="form-group">
+                <label>العنوان الرئيسي *</label>
+                <input type="text" id="customerAddress" required placeholder="المدينة - الحي - الشارع">
+            </div>
+
+            <hr>
+
+            <!-- أماكن الاستلام -->
+            <div class="form-group">
+                <label>أماكن الاستلام *</label>
+                <div id="pickupContainer">
+                    <div class="dynamic-field">
+                        <input type="text" class="pickup-input" required placeholder="الموقع 1 (مثال: متجر / منزل)">
+                    </div>
+                </div>
+                <button type="button" class="btn-add" onclick="addField('pickupContainer', 'pickup-input', 'الموقع')">
+                    + إضافة مكان استلام آخر
+                </button>
+            </div>
+
+            <!-- أماكن التسليم -->
+            <div class="form-group">
+                <label>أماكن التسليم *</label>
+                <div id="dropoffContainer">
+                    <div class="dynamic-field">
+                        <input type="text" class="dropoff-input" required placeholder="الموقع 1 (الوجهة النهائية)">
+                    </div>
+                </div>
+                <button type="button" class="btn-add" onclick="addField('dropoffContainer', 'dropoff-input', 'الموقع')">
+                    + إضافة مكان تسليم آخر
+                </button>
+            </div>
+
+            <hr>
+
+            <!-- تفاصيل البضاعة -->
+            <div class="form-group">
+                <label>نوعية البضاعة المنقولة *</label>
+                <select id="goodsType" required>
+                    <option value="" disabled selected>اختر نوع البضاعة</option>
+                    <option value="عادية (مغلفة جيداً)">عادية (مغلفة جيداً)</option>
+                    <option value="قابلة للكسر (زجاج، الكترونيات)">قابلة للكسر (زجاج، الكترونيات)</option>
+                    <option value="هشة (حلويات، ورد، الخ)">هشة (حلويات، ورد، الخ)</option>
+                    <option value="سوائل">سوائل</option>
+                    <option value="مستندات وأوراق مهمة">مستندات وأوراق مهمة</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>ملاحظات إضافية</label>
+                <textarea id="notes" placeholder="أي تفاصيل تود إضافتها (وقت التوصيل، تفاصيل إضافية...)"></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">إرسال الطلب عبر واتساب 💬</button>
+        </form>
+    </div>
+
+    <footer>
+        <div>للتواصل والدعم: 0500000000 | info@delivery.com</div>
+        <div class="social-links">
+            <a href="#">تويتر (X)</a> | 
+            <a href="#">إنستجرام</a> | 
+            <a href="#">فيسبوك</a>
+        </div>
+        <div style="margin-top: 8px; font-size: 0.75rem; opacity: 0.7;">
+            جميع الحقوق محفوظة © لخدمات التوصيل 2026
+        </div>
+    </footer>
+
+    <script>
+        function addField(containerId, inputClass, placeholderPrefix) {
+            const container = document.getElementById(containerId);
+            const fieldCount = container.children.length + 1;
+            
+            const div = document.createElement('div');
+            div.className = 'dynamic-field';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = inputClass;
+            input.placeholder = `${placeholderPrefix} ${fieldCount}`;
+            input.required = true;
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn-remove';
+            removeBtn.textContent = '✕';
+            removeBtn.onclick = function() {
+                container.removeChild(div);
+            };
+            
+            div.appendChild(input);
+            div.appendChild(removeBtn);
+            container.appendChild(div);
+        }
+
+        document.getElementById('deliveryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // ضع هنا رقم المندوب أو الشركة مع رمز الدولة بدون أصفار أو علامة + (مثال للسعودية: 9665...)
+            const whatsappNumber = "966500000000"; 
+
+            const name = document.getElementById('customerName').value;
+            const phone = document.getElementById('customerPhone').value;
+            const address = document.getElementById('customerAddress').value;
+            const goodsType = document.getElementById('goodsType').value;
+            const notes = document.getElementById('notes').value;
+
+            const pickupInputs = document.querySelectorAll('.pickup-input');
+            let pickups = [];
+            pickupInputs.forEach(input => { if(input.value) pickups.push(input.value); });
+
+            const dropoffInputs = document.querySelectorAll('.dropoff-input');
+            let dropoffs = [];
+            dropoffInputs.forEach(input => { if(input.value) dropoffs.push(input.value); });
+
+            let message = `*📦 طلب توصيل جديد*\n\n`;
+            message += `*👤 بيانات العميل:*\n`;
+            message += `الاسم: ${name}\n`;
+            message += `رقم الجوال: ${phone}\n`;
+            message += `العنوان: ${address}\n\n`;
+
+            message += `*📍 أماكن الاستلام:*\n`;
+            pickups.forEach((p, index) => {
+                message += `${index + 1}- ${p}\n`;
+            });
+            message += `\n`;
+
+            message += `*🏁 أماكن التسليم:*\n`;
+            dropoffs.forEach((d, index) => {
+                message += `${index + 1}- ${d}\n`;
+            });
+            message += `\n`;
+
+            message += `*🏷️ تفاصيل البضاعة:*\n`;
+            message += `النوع: ${goodsType}\n\n`;
+
+            if(notes.trim() !== "") {
+                message += `*📝 ملاحظات إضافية:*\n${notes}\n`;
+            }
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        });
+    </script>
+</body>
+</html>
